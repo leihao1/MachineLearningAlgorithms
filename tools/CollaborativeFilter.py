@@ -13,6 +13,28 @@ ROW=len(lines)
 COLUMN=len(lines[0])
 HEADER=False
 
+'''
+Initialize input file : 
+Fill empty data with None to make column correct.
+Convert strings to integers in each row to calculate similarity later.
+Return a item*user matrix.
+'''
+def initialize(matrix):
+
+    if HEADER:
+        begin=1
+    else:
+        begin=0
+    for i in range(begin,ROW):
+        for j in range(0,COLUMN):
+            if matrix[i][j]:
+                matrix[i][j]=int(matrix[i][j])
+            else:
+                matrix[i][j]=None
+        while len(matrix[i])<COLUMN:
+            matrix[i].append(None)
+    return matrix
+
 'subtract mean rating mi from each items(row)'
 def subtract(vector):
     total,count=0,0
