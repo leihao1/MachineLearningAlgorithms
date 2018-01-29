@@ -118,9 +118,3 @@ def predict(row,col,N,with_header=False):
         return total/count
 
 
-'''
-    fo=open(fopath)
-    fo.write(" \n")
-'''
-    
-
