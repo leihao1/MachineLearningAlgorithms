@@ -35,6 +35,13 @@ Function `sim_between_rows()`
 * `{2: -0.17854212213729673, 3: 0.41403933560541256, 4: -0.10245014273309601, 5: -0.3
 0895719032666236, 6: 0.5870395085642741}`
 
-TODO:
+
+Function `predict()`
 -
-* user can save result as output file 
+>Predict rating value at position (row,col) with N neighbors.
+>
+>Default file has no header.
+>
+>* `>>> predict(1,5,2)`
+>* `2.586406866934817`
+
