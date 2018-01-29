@@ -34,3 +34,7 @@ Function `sim_between_rows()`
 * `>>> sim_between_rows(initialize(lines),1)`
 * `{2: -0.17854212213729673, 3: 0.41403933560541256, 4: -0.10245014273309601, 5: -0.3
 0895719032666236, 6: 0.5870395085642741}`
+
+TODO:
+-
+* user can save result as output file 
