@@ -1,5 +1,21 @@
 from math import sqrt
 
+'subtract mean rating mi from each items(row)'
+def subtract(vector):
+    total,count=0,0
+    for i in vector:
+        if i==0 or i:
+            total+=i
+            count+=1
+    mi=total/count
+    new_vector=[]
+    for i in range(0,len(vector)):
+        if vector[i]==0 or vector[i]:
+            new_vector.append(vector[i]-mi)
+        else:
+            new_vector.append(0)
+    return new_vector
+
 'calculate cosine similarity value between two vectors'
 def sim(v1,v2):
     if v1==v2:
