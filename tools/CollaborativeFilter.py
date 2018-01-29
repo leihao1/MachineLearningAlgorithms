@@ -1,4 +1,17 @@
 from math import sqrt
+import sys
+import csv
+
+fipath=sys.argv[1]
+'fopath=sys.argv[2]'
+
+with open(fipath,'r') as fi:
+    reader=csv.reader(fi)
+    lines=list(reader)
+
+ROW=len(lines)
+COLUMN=len(lines[0])
+HEADER=False
 
 'subtract mean rating mi from each items(row)'
 def subtract(vector):
