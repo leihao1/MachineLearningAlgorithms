@@ -117,3 +117,10 @@ def predict(row,col,N,with_header=False):
             count+=i[1]
         return total/count
 
+
+'''
+    fo=open(fopath)
+    fo.write(" \n")
+'''
+    
+
