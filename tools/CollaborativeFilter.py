@@ -1,6 +1,7 @@
 from math import sqrt
 import sys
 import csv
+import operator
 
 fipath=sys.argv[1]
 'fopath=sys.argv[2]'
@@ -77,4 +78,42 @@ def sim_between_rows(matrix,row):
             all_sim[rows]=sim(sub_matrix[row-1],sub_matrix[rows-1])
     return all_sim
 
+'''
+Predict rating value at position (row,col) with N neighbors.
+Default file has no header.
+'''
+def predict(row,col,N,with_header=False):
+    HEADER=with_header
+
+    'get integer matrix rows*columns'
+    matrix=initialize(lines)
+
+    'rating value in the given position already exist'
+    if matrix[row-1][col-1]:
+        return matrix[row-1][col-1]
+
+    'all similarity values comparing with the given row'
+    all_sim=sim_between_rows(matrix,row)
+
+    'choose N most similar neighbors by the given number N'
+    neighbors=[]
+    for _ in range(0,N):
+        max_sim_neighbor=max(all_sim.items(), key=operator.itemgetter(1))[0]
+        neighbors.append([max_sim_neighbor,all_sim[max_sim_neighbor]])
+        del all_sim[max_sim_neighbor]
+    
+    'ensure the value is not empty in the given column among those neighbors(rows)'
+    valid=True
+    for i in neighbors:
+        if matrix[i[0]-1][col-1]==None:
+            valid=False
+            print('Error: Empty value in neighbor\'s filed. row:',i[0],'coloumn:',col)
+
+    'valid position, return predict rating value'
+    if valid:
+        total,count=0,0
+        for i in neighbors:
+            total+=i[1]*matrix[i[0]-1][col-1]
+            count+=i[1]
+        return total/count
 
