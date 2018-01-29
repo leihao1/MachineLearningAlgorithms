@@ -19,4 +19,10 @@ Function `subtract()`
 * `>>> subtract(a)`
 * `[-2.6, 0, -0.6000000000000001, 0, 0, 1.4, 0, 0, 1.4, 0, 0.3999999999999999, 0]`
 
-
+Function `initialize()`
+-
+>Initialize input file : 
+>* Fill empty data with None to make column correct.
+>* Convert strings to integers in each row to calculate similarity later.
+>* Return a item*user integer matrix.
+>
