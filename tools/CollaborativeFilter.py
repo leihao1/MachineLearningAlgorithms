@@ -65,3 +65,16 @@ def sim(v1,v2):
             b+=v2[i]*v2[i]
         down=sqrt(a)*sqrt(b)
         return up/down
+
+'calculate all similarity between items(rows) by comparing with the given item(row)'
+def sim_between_rows(matrix,row):
+    'Pearson Correlation'
+    sub_matrix=[subtract(i) for i in matrix]
+
+    all_sim={}
+    for rows in range(1,ROW+1):
+        if rows!=row:
+            all_sim[rows]=sim(sub_matrix[row-1],sub_matrix[rows-1])
+    return all_sim
+
+
