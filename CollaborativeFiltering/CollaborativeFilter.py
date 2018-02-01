@@ -13,6 +13,7 @@ with open(fipath,'r') as fi:
 ROW=len(lines)
 COLUMN=len(lines[0])
 HEADER=False
+overall_avg_rating=0
 
 '''
 Initialize input file : 
@@ -21,7 +22,8 @@ Convert strings to integers in each row to calculate similarity later.
 Return a item*user matrix.
 '''
 def initialize(matrix):
-
+    rating=0
+    total=0
     if HEADER:
         begin=1
     else:
@@ -30,10 +32,14 @@ def initialize(matrix):
         for j in range(0,COLUMN):
             if matrix[i][j]:
                 matrix[i][j]=int(matrix[i][j])
+                rating+=matrix[i][j]
+                total+=1
             else:
                 matrix[i][j]=None
         while len(matrix[i])<COLUMN:
             matrix[i].append(None)
+    global overall_avg_rating
+    overall_avg_rating=rating/total
     return matrix
 
 'subtract mean rating mi from each items(row)'
@@ -57,7 +63,7 @@ def sim(v1,v2):
     if v1==v2:
         return 1.00
     if len(v1)!=len(v2):
-        print('Error')
+        print('Error:Can not calculate vectors with different length')
     else:
         up,a,b=0,0,0
         for i in range(0,len(v1)):
@@ -87,12 +93,27 @@ def get_neighbor(all_sim,N):
         del all_sim[max_sim_neighbor]
     return neighbors
 
+'estimate final predict value by basic CF or combine with global baseline'
+def estimate(matrix,neighbors,col,baseline=0):
+    total,count=0,0
+    for i in neighbors:
+        if matrix[i[0]-1][col-1]!=None:
+            total+=i[1]*(matrix[i[0]-1][col-1]-baseline)
+            count+=i[1]
+    if count==0:
+        total,count=0,1
+    predict=baseline+total/count
+    return predict    
+
 '''
 Predict rating value at position (row,col) with N neighbors.
 Default file has no header.
 '''
-def predict(row,col,N,with_header=False):
+def basic_predict(row,col,N,with_header=False):
     HEADER=with_header
+    assert(N>0),'Neighbor N must be a positive integer'
+    assert(row>0 and col>0),"Row or Column must be positive integers"
+    assert(row<=ROW and col<=COLUMN),"Row or Column out of dataset boundary"
 
     'get integer matrix rows*columns'
     matrix=initialize(lines)
@@ -116,11 +137,40 @@ def predict(row,col,N,with_header=False):
 
     'given position is not empty, return predict rating value'
     if empty==False:
-        total,count=0,0
-        for i in neighbors:
-            total+=i[1]*matrix[i[0]-1][col-1]
-            count+=i[1]
-        predict=total/count
-        return predict
+        return estimate(matrix,neighbors,col)
+
+
+'predict user rating using CF combine with baseline algorithsm'
+def baseline_predict(row,col,N):
+    assert(N>0),'Neighbor N must be a positive integer'
+    assert(row>0 and col>0),"Row or Column must be positive integers"
+    assert(row<=ROW and col<=COLUMN),"Row or Column out of dataset boundary"
+    matrix=initialize(lines)
+    if matrix[row-1][col-1]:
+        return matrix[row-1][col-1]
+
+    all_sim=sim_between_rows(matrix,row)
+    neighbors=get_neighbor(all_sim,N)
+
+    userx_rating=0
+    userx_count=0
+    for point in matrix:
+        if point[col-1] or point[col-1]==0:
+            userx_rating += point[col-1]
+            userx_count += 1
+    userx_avg=userx_rating/userx_count
+
+    item_rating=0
+    item_count=0
+    for p in matrix[row-1]:
+        if p or p==0:
+            item_rating += p
+            item_count += 1
+    item_avg=item_rating/item_count
+    
+    bx=userx_avg - overall_avg_rating
+    bi=item_avg - overall_avg_rating
+    baseline=overall_avg_rating+bx+bi
+    return estimate(matrix,neighbors,col,baseline)
 
 
