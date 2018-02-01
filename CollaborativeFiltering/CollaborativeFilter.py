@@ -4,11 +4,14 @@ import csv
 import operator
 
 fipath=sys.argv[1]
-'fopath=sys.argv[2]'
+ftest_path=sys.argv[2]
 
 with open(fipath,'r') as fi:
     reader=csv.reader(fi)
     lines=list(reader)
+with open(ftest_path,'r') as ftest:
+    reader2=csv.reader(ftest)
+    test_set=list(reader2)
 
 ROW=len(lines)
 COLUMN=len(lines[0])
@@ -63,7 +66,8 @@ def sim(v1,v2):
     if v1==v2:
         return 1.00
     if len(v1)!=len(v2):
-        print('Error:Can not calculate vectors with different length')
+        print('Can not calculate vectors with different length')
+        exit()
     else:
         up,a,b=0,0,0
         for i in range(0,len(v1)):
@@ -72,6 +76,7 @@ def sim(v1,v2):
             b+=v2[i]*v2[i]
         down=sqrt(a)*sqrt(b)
         return up/down
+
 
 'calculate all similarity between items(rows) by comparing with the given item(row)'
 def sim_between_rows(matrix,row):
@@ -84,6 +89,7 @@ def sim_between_rows(matrix,row):
             all_sim[rows]=sim(sub_matrix[row-1],sub_matrix[rows-1])
     return all_sim
 
+
 'choose N most similar neighbors by the given number N'
 def get_neighbor(all_sim,N):
     neighbors=[]
@@ -92,6 +98,7 @@ def get_neighbor(all_sim,N):
         neighbors.append([max_sim_neighbor,all_sim[max_sim_neighbor]])
         del all_sim[max_sim_neighbor]
     return neighbors
+
 
 'estimate final predict value by basic CF or combine with global baseline'
 def estimate(matrix,neighbors,col,baseline=0):
@@ -105,22 +112,26 @@ def estimate(matrix,neighbors,col,baseline=0):
     predict=baseline+total/count
     return predict    
 
+
 '''
 Predict rating value at position (row,col) with N neighbors.
 Default file has no header.
 '''
 def basic_predict(row,col,N,with_header=False):
     HEADER=with_header
-    assert(N>0),'Neighbor N must be a positive integer'
+    assert(0<N<ROW),'Neighbor N must between 0 and the maximum row number'
     assert(row>0 and col>0),"Row or Column must be positive integers"
     assert(row<=ROW and col<=COLUMN),"Row or Column out of dataset boundary"
 
     'get integer matrix rows*columns'
     matrix=initialize(lines)
 
-    'rating value in the given position already exist'
+    """
+    rating value in the given position already exist
     if matrix[row-1][col-1]:
-        return matrix[row-1][col-1]
+        exist=True
+        origin=matrix[row-1][col-1]
+    """
 
     'all similarity values comparing with the given row'
     all_sim=sim_between_rows(matrix,row)
@@ -133,21 +144,23 @@ def basic_predict(row,col,N,with_header=False):
     for i in neighbors:
         if matrix[i[0]-1][col-1]==None:
             empty=True
-            print('Error: Empty value in neighbor\'s filed. row:',i[0],'coloumn:',col)
+            print('Empty value in neighbor\'s filed. row:',i[0],'coloumn:',col)
 
     'given position is not empty, return predict rating value'
     if empty==False:
-        return estimate(matrix,neighbors,col)
+        predict = estimate(matrix,neighbors,col)
+        return predict
+    else:
+        exit()
 
 
 'predict user rating using CF combine with baseline algorithsm'
 def baseline_predict(row,col,N):
-    assert(N>0),'Neighbor N must be a positive integer'
+
+    assert(0<N<ROW),'Neighbor N must between 0 and the maximum row number'
     assert(row>0 and col>0),"Row or Column must be positive integers"
     assert(row<=ROW and col<=COLUMN),"Row or Column out of dataset boundary"
     matrix=initialize(lines)
-    if matrix[row-1][col-1]:
-        return matrix[row-1][col-1]
 
     all_sim=sim_between_rows(matrix,row)
     neighbors=get_neighbor(all_sim,N)
@@ -171,6 +184,49 @@ def baseline_predict(row,col,N):
     bx=userx_avg - overall_avg_rating
     bi=item_avg - overall_avg_rating
     baseline=overall_avg_rating+bx+bi
-    return estimate(matrix,neighbors,col,baseline)
+    predict=estimate(matrix,neighbors,col,baseline)
+    return predict
 
+
+'return the points that need to be test (set T)'
+def get_test_points():
+    matrix=initialize(lines)
+    test_matrix=initialize(test_set)
+    test_points=[]
+    for row in range(len(matrix)):
+        for col in range(len(matrix[row])):
+            if matrix[row][col]!=test_matrix[row][col]:
+                temp=[]
+                temp.append(row)
+                temp.append(col)
+                temp.append(matrix[row][col])
+                test_points.append(temp)
+    return test_points
+
+
+'''
+Evaluate different algorithms(basic/baseline+cf) with given neighbors.
+RMSE:Root-mean-square error.
+'''
+def evaluate(function,neighbors):
+    test_set=get_test_points()
+    square_error=0
+    N=len(test_set)
+
+    assert(N>1),"Test set must including more than one data"
+
+    for p in test_set:
+        predict=function(p[0]+1,p[1]+1,neighbors)
+        square_error += pow(predict-p[2],2)
+
+    RMSE=sqrt(square_error/N)
+    return RMSE
+
+'evaluate basic CF algorithms'
+def basic_evaluate(neighbors):
+    return evaluate(basic_predict,neighbors)
+
+'evaluate CF+baseline algorithms'
+def baseline_evaluate(neighbors):
+    return evaluate(baseline_predict,neighbors)
 
