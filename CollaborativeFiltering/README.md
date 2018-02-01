@@ -2,7 +2,7 @@
 Simple tool to predict item rating will be given by specific users
 with Collaborative Filtering algorithsm.
 
-(based on [fi.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/fi.csv) dataset and three pics above)
+(examples below are based on the [fi.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/fi.csv) dataset and three pics above)
 
 ### Function `sim()`
 >calculate cosine similarity value between two vectors
@@ -53,7 +53,7 @@ with Collaborative Filtering algorithsm.
 >* `2.586406866934817`
 
 ## Global baseline + Collaborative Filtering algorithms ([baseline version](https://github.com/leihao1/soen691/releases/tag/baseline))
-CF combine with global baseline algorithms to solve cold start problem of CF
+CF combine with global baseline algorithms to solve cold start problem of CF.
 
 System can predict one item's rating by similar items even some of them did not rated by that user.
 
