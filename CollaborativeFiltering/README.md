@@ -2,6 +2,8 @@
 Simple tool to predict item rating will be given by specific users
 with Collaborative Filtering algorithsm.
 
+(See pics above)
+
 Function `sim()`
 -
 >calculate cosine similarity value between two vectors
