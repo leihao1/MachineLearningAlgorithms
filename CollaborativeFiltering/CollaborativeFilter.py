@@ -3,12 +3,15 @@ import sys
 import csv
 import operator
 
+
 fipath=sys.argv[1]
-'fopath=sys.argv[2]'
+fopath=sys.argv[2]
+
 
 with open(fipath,'r') as fi:
     reader=csv.reader(fi)
     lines=list(reader)
+
 
 ROW=len(lines)
 COLUMN=len(lines[0])
@@ -173,4 +176,12 @@ def baseline_predict(row,col,N):
     baseline=overall_avg_rating+bx+bi
     return estimate(matrix,neighbors,col,baseline)
 
+    'save as output file'
+    output(matrix,neighbors,)
+
+
+def output():
+    with open(fopath,'w') as fo:
+        writer=csv.writer(fo)
+        writer.writerows()
 
