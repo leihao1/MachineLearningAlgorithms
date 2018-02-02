@@ -1,7 +1,7 @@
 ## Item-Item Collaborative Filtering tool ([basic version](https://github.com/leihao1/soen691/releases/tag/basic))
 Simple tool to predict item rating will be given by specific users with Collaborative Filtering algorithsm.
 
-#### Test Files:
+#### TEST FILES:
 * [fi.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/fi.csv)
 * [target.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/target.png)
 * [similarity.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/similarity.png)
@@ -58,7 +58,7 @@ Simple tool to predict item rating will be given by specific users with Collabor
 CF combine with global baseline algorithms to solve cold start problem of CF.
 System can predict one item's rating now by using similar items even some of them did not rated by that user.
 
-#### Test Files:
+#### TEST FILES:
 * [sample_movie_ratings.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/sample_movie_ratings.csv)
 
 #### Function `basic_predict()`
@@ -72,7 +72,30 @@ System can predict one item's rating now by using similar items even some of the
 >* `>>> baseline_predict(20,29,5)`
 >* `2.603113815971248`
 
-## Evaluating Predictions
+## Evaluating Predictions ([Evaluation version](https://github.com/leihao1/soen691/releases/tag/Evaluation))
+
+#### TEST FILES:
+* [fi.csv](https://github.com/leihao1/soen691/blob/Evaluation/CollaborativeFiltering/fi.csv)
+* [fi_test.csv](https://github.com/leihao1/soen691/blob/Evaluation/CollaborativeFiltering/fi_test.csv)
+* [sample_movie_ratings.csv](https://github.com/leihao1/soen691/blob/Evaluation/CollaborativeFiltering/sample_movie_ratings.csv)
+* [sample_movie_ratings_test.csv](https://github.com/leihao1/soen691/blob/Evaluation/CollaborativeFiltering/sample_movie_ratings_test.csv)
+
+#### Function `get_test_point()`
+>return the points that need to be test (set T)
+>* `$ python -i CollaborativeFilter.py fi.csv fi_test.csv`
+>* `>>> get_test_points()`
+>* `[[0, 8, 5], [0, 10, 4], [1, 9, 2], [1, 10, 1], [1, 11, 3], [2, 8, 4], [2, 9, 3], [2, 10, 5]]`
+
+#### Function `baseline_evaluate(neighbors)`
+>evaluate CF+baseline algorithms with N neighbors
+>* `$ python -i CollaborativeFilter.py sample_movie_ratings.csv sample_movie_ratings_test.csv`
+>* `>>> baseline_evaluate(5)`
+>* `0.8776903969365037`
+>* `>>> baseline_evaluate(10)`
+>* `1.0953046153292745`
+
+#### Function `basic_evaluate(neighbors):
+>evaluate basic CF algorithms
 
 
 
