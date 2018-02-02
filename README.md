@@ -2,7 +2,6 @@
 
 #### Stanford MOOC
 
-#### Jan 31, 2017
 
 * [Website](https://lagunita.stanford.edu/courses/course-v1:ComputerScience+MMDS+SelfPaced/about)
 
