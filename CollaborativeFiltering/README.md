@@ -12,9 +12,9 @@ Simple tool to predict item rating will be given by specific users with Collabor
 * [`sim()`](#simv1v2)
 * [`subtract()`](#subtractvector)
 * [`initialize()`](#initializeinput_files)
-* [`sim_between_rows()`](#simbetweenrowsmatrixrow)
-* [`get_neighbor()`](#getneighborotherrowsN))
-* [`predict()`](#predictrowcolN)
+* [`sim_between_rows()`](#sim_between_rowsmatrixrow)
+* [`get_neighbor()`](#get_neighborother_rowsn)
+* [`predict()`](#predictrowcoln)
 
 ##### `sim(v1,v2)`
 >
@@ -69,8 +69,8 @@ System can predict one item's rating now by using similar items even some of the
 * [sample_movie_ratings.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/sample_movie_ratings.csv)
 
 #### FUNCTIONS:
-* [`basic_predict()`](#####basicpredictrowcolN)
-* [`baseline_predict()`](#####baselinepredictrowcolN)
+* [`basic_predict()`](#basic_predictrowcoln)
+* [`baseline_predict()`](#baseline_predictrowcoln)
 
 ##### `basic_predict(row,col,N)`
 >
