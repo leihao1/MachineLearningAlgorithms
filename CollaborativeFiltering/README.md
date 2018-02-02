@@ -7,7 +7,7 @@ Simple tool to predict item rating will be given by specific users with Collabor
 * [similarity.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/similarity.png)
 * [result.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/result.png)
 
-#### Function `sim()`
+#### Function `sim(v1,v2)`
 >calculate cosine similarity value between two vectors
 >
 >* `>>> a=[1,2,3]`
@@ -15,7 +15,7 @@ Simple tool to predict item rating will be given by specific users with Collabor
 >* `>>> sim(a,b)`
 >* `0.7142857142857143`
 
-#### Function `subtract()`
+#### Function `subtract(vector)`
 
 >subtract mean rating mi from each items(row)
 >
@@ -23,14 +23,14 @@ Simple tool to predict item rating will be given by specific users with Collabor
 >* `>>> subtract(a)`
 >* `[-2.6, 0, -0.6000000000000001, 0, 0, 1.4, 0, 0, 1.4, 0, 0.3999999999999999, 0]`
 
-#### Function `initialize()`
+#### Function `initialize(input_files)`
 
 >Initialize input file : 
 >* Fill empty data with None to make column correct.
 >* Convert strings to integers in each row to calculate similarity later.
 >* Return a item*user integer matrix.
 
-#### Function `sim_between_rows()`
+#### Function `sim_between_rows(matrix,row)`
 
 >calculate all similarity between items(rows) by comparing with the given item(row)
 >
@@ -38,14 +38,14 @@ Simple tool to predict item rating will be given by specific users with Collabor
 >* `{2: -0.17854212213729673, 3: 0.41403933560541256, 4: -0.10245014273309601, 5: -0.3
 >0895719032666236, 6: 0.5870395085642741}`
 
-#### Function `get_neighbor()`
+#### Function `get_neighbor(other_rows,N)`
 
 >choose N most similar neighbors by the given number N
 >
 >* `>>> get_neighbor(sim_between_rows(initialize(lines),1),2)`
 >* `[[6, 0.5870395085642741], [3, 0.41403933560541256]]`
 
-#### Function `predict()`
+#### Function `predict(row,col,N)`
 
 >Predict rating value at position (row,col) with N neighbors.
 >
@@ -61,10 +61,10 @@ System can predict one item's rating now by using similar items even some of the
 #### TEST FILES:
 * [sample_movie_ratings.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/sample_movie_ratings.csv)
 
-#### Function `basic_predict()`
+#### Function `basic_predict(row,col,N)`
 >same as `predict()` function in basic version 
 
-#### Function `baseline_predict()`
+#### Function `baseline_predict(row,col,N)`
 >predict item's rating by global baseline even some neighbors did not rated by that user
 >* `>>> basic_predict(20,29,5)`
 >* `Error: Empty value in neighbor's filed. row: 13 coloumn: 29`
@@ -95,7 +95,7 @@ Evaluate different algorithms predictions with RMSE(root-mean-square error) valu
 >* `>>> baseline_evaluate(10)`
 >* `1.0953046153292745`
 
-#### Function `basic_evaluate(neighbors):
+#### Function `basic_evaluate(neighbors)`
 >evaluate basic CF algorithms
 
 
