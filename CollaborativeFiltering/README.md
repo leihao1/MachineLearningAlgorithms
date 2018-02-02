@@ -12,9 +12,9 @@ Simple tool to predict item rating will be given by specific users with Collabor
 * [`sim()`](#simv1v2)
 * [`subtract()`](#subtractvector)
 * [`initialize()`](#initializeinput_files)
-* [`sim_between_rows()`](#sim_between_rowsmatrixrow)
-* [`get_neighbor()`](#get_neighbor(other_rows,N))
-* [`predict()`](#predict(row,col,N)-1)
+* [`sim_between_rows()`](#simbetweenrowsmatrixrow)
+* [`get_neighbor()`](#getneighborotherrowsN))
+* [`predict()`](#predictrowcolN)
 
 ##### `sim(v1,v2)`
 >
@@ -44,25 +44,22 @@ Simple tool to predict item rating will be given by specific users with Collabor
 >
 > -calculate all similarity between items(rows) by comparing with the given item(row)
 >
-> `>>> sim_between_rows(initialize(lines),1)`
->
-> `{2: -0.17854212213729673, 3: 0.41403933560541256, 4: -0.10245014273309601, 5: -0.30895719032666236, 6: 0.5870395085642741}`
+>* `>>> sim_between_rows(initialize(lines),1)`
+>* `{2: -0.17854212213729673, 3: 0.41403933560541256, 4: -0.10245014273309601, 5: -0.30895719032666236, 6: 0.5870395085642741}`
 
 ##### `get_neighbor(other_rows,N)`
 >
 > -choose N most similar neighbors by the given number N
 >
-> `>>> get_neighbor(sim_between_rows(initialize(lines),1),2)`
->
-> `[[6, 0.5870395085642741], [3, 0.41403933560541256]]`
+>* `>>> get_neighbor(sim_between_rows(initialize(lines),1),2)`
+>* `[[6, 0.5870395085642741], [3, 0.41403933560541256]]`
 
 ##### `predict(row,col,N)`
 >
 > -predict rating value at position (row,col) with N neighbors.
 >
-> `>>> predict(1,5,2)`
->
-> `2.586406866934817`
+>* `>>> predict(1,5,2)`
+>* `2.586406866934817`
 ---
 ## Global baseline + Collaborative Filtering algorithms ([baseline version](https://github.com/leihao1/soen691/releases/tag/baseline))
 CF combine with global baseline algorithms to solve cold start problem of CF.
@@ -72,8 +69,8 @@ System can predict one item's rating now by using similar items even some of the
 * [sample_movie_ratings.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/sample_movie_ratings.csv)
 
 #### FUNCTIONS:
-* [`basic_predict()`](#####basic_predictrowcolN)
-* [`baseline_predict()`](#####baseline_predictrowcolN)
+* [`basic_predict()`](#####basicpredictrowcolN)
+* [`baseline_predict()`](#####baselinepredictrowcolN)
 
 ##### `basic_predict(row,col,N)`
 >
