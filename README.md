@@ -1,8 +1,11 @@
-# SOEN691 Big Data Analytics
+# Mining Massive Datasets
 
-labs & homeworks & project
-### Website:https://users.encs.concordia.ca/~tglatard/teaching/big-data/winter-2018/
+#### Stanford MOOC
 
-### Textbook:http://i.stanford.edu/~ullman/mmds/book0n.pdf
+#### Jan 31, 2017
+
+* [Website](https://lagunita.stanford.edu/courses/course-v1:ComputerScience+MMDS+SelfPaced/about)
+
+* [Textbook](http://i.stanford.edu/~ullman/mmds/book0n.pdf)
 
 
