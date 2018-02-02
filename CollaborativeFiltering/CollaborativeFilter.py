@@ -144,7 +144,7 @@ def basic_predict(row,col,N,with_header=False):
     for i in neighbors:
         if matrix[i[0]-1][col-1]==None:
             empty=True
-            print('Empty value in neighbor\'s filed. row:',i[0],'coloumn:',col)
+            print('Empty value in neighbor\'s field. row:',i[0],'coloumn:',col)
 
     'given position is not empty, return predict rating value'
     if empty==False:
