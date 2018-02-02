@@ -73,6 +73,7 @@ System can predict one item's rating now by using similar items even some of the
 >* `2.603113815971248`
 
 ## Evaluating Predictions ([Evaluation version](https://github.com/leihao1/soen691/releases/tag/Evaluation))
+Evaluate different algorithms predictions with RMSE(root-mean-square error) value by removing exist rating value in original datasets.
 
 #### TEST FILES:
 * [fi.csv](https://github.com/leihao1/soen691/blob/Evaluation/CollaborativeFiltering/fi.csv)
