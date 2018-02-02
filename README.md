@@ -1,4 +1,4 @@
-# Mining Massive Datasets
+## Mining Massive Datasets
 
 #### Stanford MOOC
 
