@@ -13,38 +13,30 @@ with open(fipath,'r') as fi:
 ROW=len(lines)
 COLUMN=len(lines[0])
 
-back_up={}
-cluster_id=0
 all_points=[]
-
 'all_clusters={cluster_id:[x,y,sumx,sumy,N]}'
 all_clusters={}
+stablize=True
 
+cluster_id=0
+back_up={}
 'good_k={number:avg_cenroid_dis}'
 
-def find_all_points():
-    points=[]
+def find_from_cluster(lines):
+    init_points=[]
     for r in range(ROW):
         for c in range(COLUMN):
             if lines[r][c] != '':
                 position=(r+1,c+1)
-                points.append(position)
+                init_points.append(position)
                 global back_up
                 back_up[position]=int(lines[r][c])
-    return points
+    return init_points
 
-def select_K():
+def select_k():
     return 4
 
-def a():
-    global all_points
-    all_points=find_all_points()
-    global all_clusters
-    all_clusters=pick_initial_points(select_K())
-    print('all_clusters:',all_clusters)
-    assigning_cluster()
-    print('after all_clusters:',all_clusters)
-    
+   
 
 'pick K initial points as K clusters by dispersed method'
 def pick_initial_points(K):
@@ -52,11 +44,11 @@ def pick_initial_points(K):
     '->2.dispersed'
 
     copy=list(all_points)
-    print("all_points:",all_points)
+    'print("all_points:",all_points)'
     first=random.choice(all_points)
-    print("first:",first)
+    'print("first:",first)'
     init_clusters={}
-    init_clusters[0]=[first[0],first[1],first[0],first[1],1]
+    init_clusters[0]=[first[0],first[1],0,0,0]
 
     copy.remove(first)
     picked=[first]
@@ -72,15 +64,17 @@ def pick_initial_points(K):
         copy.remove(waitlist)
         picked.append(waitlist)
  
-        init_clusters[n]=[waitlist[0],waitlist[1],waitlist[0],waitlist[1],1]
-        
+        init_clusters[n]=[waitlist[0],waitlist[1],0,0,0]
+    
     return init_clusters
         
-'go through the whole dataset and assign each point to one cluster by distance'
-def assigning_cluster():
-    global all_clusters
-    copy=list(all_points)
-    for p in copy:
+
+'go through the whole dataset and assign each point to one cluster by centroid distance'
+def assigning_cluster(points,clusters):
+    all_clusters=clusters
+    all_points=points
+
+    for p in all_points:
 
         cluster_dis=[]
         for c in all_clusters:
@@ -96,15 +90,56 @@ def assigning_cluster():
         all_clusters[assign][2]+=p[0]
         all_clusters[assign][3]+=p[1]
         all_clusters[assign][4]+=1
+    "print('after assigning:')"
+    'print(all_clusters)'
+
+    final_cluesters=reset_cluster(all_clusters)
+    return final_cluesters
 
 
-def reset_cluster():
-    if tablelize:
-        'next phase'
-        return 0
-    else:
-        assigning_cluster()
-    return 0
+def reset_cluster(cluster):
+    global stablize
+    stablize=True
+    for c in cluster:    
+        x=cluster[c][0]
+        y=cluster[c][1]
+        sumx=cluster[c][2]
+        sumy=cluster[c][3]
+        N=cluster[c][4]
+        if x!=sumx/N or y!=sumy/N:
+            stablize=False
+            x=sumx/N
+            y=sumy/N
+            cluster[c][0]=x 
+            cluster[c][1]=y
+            cluster[c][2]=0
+            cluster[c][3]=0
+            cluster[c][4]=0
+
+    return cluster
+
+'clustering by K-means '
+def a():
+    global all_points
+    global all_clusters
+    
+    all_points=find_from_cluster(lines)
+
+    'step one'
+    K=select_k()
+
+    'step two'
+    all_clusters=pick_initial_points(K)
+    print('intit clusters:',all_clusters)
+
+    'step three'
+    all_clusters=assigning_cluster(all_points,all_clusters)
+
+    'loop between step two and three'
+    while stablize==False:
+        all_clusters=assigning_cluster(all_points,all_clusters)
+    print('final clusters:',all_clusters)    
+
 
 def output():
     return 0
