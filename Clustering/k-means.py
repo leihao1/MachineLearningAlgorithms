@@ -25,6 +25,7 @@ stablize=True
 back_up={}
 'good_k={number:avg_cenroid_dis}'
 
+
 'change clusters\' name.Defulat:0,1,2...k'
 def rename_cluster(cluster_name=None):
     global all_clusters
@@ -41,6 +42,7 @@ def rename_cluster(cluster_name=None):
                 str = input()
                 new_clusters[str]=all_clusters[c]
             all_clusters=new_clusters
+
 
 'get all data coordinate from exist cluster file'
 def find_from_cluster(lines):
@@ -85,9 +87,7 @@ def pick_initial_points(K):
                 max_distance,waitlist=distance,p
         copy.remove(waitlist)
         picked.append(waitlist)
- 
         init_clusters[n]=[waitlist[0],waitlist[1],0,0,0]
-    
     return init_clusters
         
 
@@ -112,9 +112,9 @@ def assigning_cluster(points,clusters):
         all_clusters[assign][2]+=p[0]
         all_clusters[assign][3]+=p[1]
         all_clusters[assign][4]+=1
-    "print('after assigning:')"
-    'print(all_clusters)'
-
+    print('After Assigning:')
+    print(all_clusters)
+    print('')
     final_cluesters=reset_cluster(all_clusters)
     return final_cluesters
 
@@ -137,22 +137,25 @@ def reset_cluster(cluster):
             cluster[c][2]=0
             cluster[c][3]=0
             cluster[c][4]=0
-
     return cluster
 
+
 'clustering by K-means '
-def a():
+def k_means(K=None):
     global all_points
     global all_clusters
-    
+    assert(K==None or (K>0 and type(K)==int)),"K must be a positive integer"
+
     all_points=find_from_cluster(lines)
 
     'step one'
-    K=select_k()
+    if K==None:
+        K=select_k()
 
     'step two'
     all_clusters=pick_initial_points(K)
-    print('intit clusters:',all_clusters)
+    print('Initial Clusters:',all_clusters)
+    print('')
 
     'step three'
     all_clusters=assigning_cluster(all_points,all_clusters)
@@ -160,9 +163,11 @@ def a():
     'loop between step two and three'
     while stablize==False:
         all_clusters=assigning_cluster(all_points,all_clusters)
-    print('final clusters:',all_clusters)    
+    print('Final Clusters:',all_clusters)   
+    print('')
 
 
+'save as output file'
 def output():
     return 0
 
