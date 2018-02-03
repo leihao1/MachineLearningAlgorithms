@@ -4,6 +4,7 @@ from math import sqrt
 import sys
 import csv
 
+
 fipath=sys.argv[1]
 
 with open(fipath,'r') as fi:
@@ -14,14 +15,34 @@ ROW=len(lines)
 COLUMN=len(lines[0])
 
 all_points=[]
+
 'all_clusters={cluster_id:[x,y,sumx,sumy,N]}'
-all_clusters={}
+all_clusters={} 
+
 stablize=True
 
-cluster_id=0
+
 back_up={}
 'good_k={number:avg_cenroid_dis}'
 
+'change clusters\' name.Defulat:0,1,2...k'
+def rename_cluster(cluster_name=None):
+    global all_clusters
+    if all_clusters:
+        if cluster_name!=None:
+            print("CLUSTER[>",cluster_name,"<]:")  
+            str = input()
+            all_clusters[str]=all_clusters[cluster_name]
+            del all_clusters[cluster_name]
+        else:
+            new_clusters={}
+            for c in all_clusters:
+                print("CLUSTER[>",c,"<] :")
+                str = input()
+                new_clusters[str]=all_clusters[c]
+            all_clusters=new_clusters
+
+'get all data coordinate from exist cluster file'
 def find_from_cluster(lines):
     init_points=[]
     for r in range(ROW):
@@ -33,10 +54,11 @@ def find_from_cluster(lines):
                 back_up[position]=int(lines[r][c])
     return init_points
 
+
+'select best K'
 def select_k():
     return 4
 
-   
 
 'pick K initial points as K clusters by dispersed method'
 def pick_initial_points(K):
