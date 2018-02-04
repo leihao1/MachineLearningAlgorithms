@@ -1,4 +1,5 @@
 # Mining Massive Datasets
+Implementing of all kinds of algorithms with python.
 
 #### Stanford MOOC
 
