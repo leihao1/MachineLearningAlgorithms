@@ -5,7 +5,7 @@ import sys
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.cbook as cbook
+
 
 '================================deal with input file=============================='
 fipath=sys.argv[1]
@@ -61,7 +61,6 @@ def pick_initial_points(K,all_points):
                 distance+=math.hypot(p[0]-i[0],p[1]-i[1])
             if distance>max_distance:
                 max_distance,waitlist=distance,p
-        
         picked.append(waitlist)
         init_clusters[n]=[waitlist[0],waitlist[1],0,0,0]
        
@@ -98,12 +97,13 @@ def assigning_cluster(all_points,all_centroid):
     print(cluster_members)
     print('')
     '''
-    final_centroid,stablize=reset_cluster(all_centroid)
-    return final_centroid,cluster_members,stablize
+    final_centroid,stabilize=reset_cluster(all_centroid)
+    return final_centroid,cluster_members,stabilize
+
 
 'reset cluster centroid and repeat assigning untill stabilize'
 def reset_cluster(cluster):
-    stable=True
+    stabilize=True
     for c in cluster:    
         x=cluster[c][0]
         y=cluster[c][1]
@@ -119,7 +119,7 @@ def reset_cluster(cluster):
             cluster[c][2]=0
             cluster[c][3]=0
             cluster[c][4]=0
-    return cluster,stable
+    return cluster,stabilize
 
 'clustering by K-means '
 def kmeans(all_points=coordinates,K=None):
@@ -131,13 +131,15 @@ def kmeans(all_points=coordinates,K=None):
 
     'all_centroid={"cluster_name":[x,y,sumx,sumy,N]}'
     all_centroid=pick_initial_points(K,all_points)
+    '''
     print('Initial Clusters:',all_centroid)
     print('')
-    
-    all_centroid,cluster_members,stable=assigning_cluster(all_points,all_centroid)
+    '''
+    all_centroid,cluster_members,stabilize=assigning_cluster(all_points,all_centroid)
 
-    while stable==False:
-        all_centroid,cluster_members,stable=assigning_cluster(all_points,all_centroid)
+
+    while stabilize==False:
+        all_centroid,cluster_members,stabilize=assigning_cluster(all_points,all_centroid)
     '''
     print('Final Clusters:')
     print(all_centroid)   
@@ -168,12 +170,12 @@ def rename_cluster(cluster,cluster_name=None):
     return cluster
 '==============================================================================='
 
-centroid,members=kmeans()
+centroid,demo=kmeans()
 
 '=================================visualization================================='
 
 'show scatterplot by matplotlib and numpy'
-def visualize(cluster=members):
+def visualize(cluster=demo):
     
     # Create data
     k = len(cluster)
