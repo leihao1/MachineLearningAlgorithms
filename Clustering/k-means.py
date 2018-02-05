@@ -17,23 +17,37 @@ COLUMN=len(lines[0])
 back_up={}
 'find all data coordinate from exist cluster in the file'
 'given cluster are used to evaluate select_k function'
-def find_from_cluster(lines):
+def find_from_cluster(files):
     initial_points=[]
     for r in range(ROW):
         for c in range(COLUMN):
-            if lines[r][c] != '':
+            if files[r][c] != '':
                 position=(r+1,c+1)
                 initial_points.append(position)
                 global back_up
-                back_up[position]=int(lines[r][c])
+                back_up[position]=int(files[r][c])
     temp={}
     temp[0]=initial_points
     initial_points=temp
     return initial_points
 
 'get data coordinate directly from file'
-def get_coordinate():
-    pass
+def get_coordinate(files):
+    is_cluster_file=False
+    initial_points={}
+    initial_points[0]=[]
+    for row in files:
+        x=row[0]
+        y=row[1]
+        if x=='' or y=='':
+            is_cluster_file=True
+        initial_points[0].append((float(x),float(y)))
+
+    if is_cluster_file:
+        initial_points=find_from_cluster(files)
+
+    return initial_points
+    
 '==================================================================================='
 
 
@@ -52,14 +66,11 @@ def visualizer(cluster):
     data=[]
     count=0
     global xmax,xmin,ymax,ymin    
-    print('cluster:',cluster)
+    
     for g in cluster:
         xy=cluster[g]
-        #print('xy:',xy)
         x=[i[0] for i in xy]
         y=[i[1] for i in xy]
-        print("x",x)
-        print('y',y)
         #x,y=y,[max(x)-i+1 for i in x] #convert to csv format standar
         if len(x) >0 and len(y)>0:
             if max(x)>xmax:
@@ -74,35 +85,33 @@ def visualizer(cluster):
         data.append(g)
         count+=len(x)
 
-    groups = ['cluster '+str(i) for i in cluster]
+    groups = ['cluster '+str(i)+"["+str(len(cluster[i]))+"]" for i in cluster]
     colors = np.random.rand(k)
-    #print('color: ',colors)
+    
     # Create plot
-    fig = plt.figure()
-    #ax = fig.add_subplot(1, 1, 1, axisbg="1.0")
+    fig = plt.figure(figsize=(xmax,ymax))
+    ax = fig.add_subplot(1, 1, 1, axisbg="1.0")
 
     for data,color,group in zip(data,colors,groups):
         x, y = data
         plt.scatter(x,y,alpha=1,label=group)
     
     plt.title('K-Means Clustering')
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
-          fancybox=True, shadow=True, ncol=5)
-    print("four: ",xmax,xmin,ymax,ymin)
-    plt.xlim(xmin-1,xmax+1)
-    plt.ylim(ymin-1,ymax+1)
+    #ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
+    ax.legend(bbox_to_anchor=(1.13, 1))
+    #ax.legend(loc='upper center', bbox_to_anchor=(1.05, 1.05),ncol=1, fancybox=True, shadow=True)
+    #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     
-    #ax.legend(bbox_to_anchor=(1.1, 1.05))
-    #ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
-    #      ncol=3, fancybox=True, shadow=True)
-    #plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.xlim(xmin-2,xmax+2)
+    plt.ylim(ymin-2,ymax+2)
+    
     global pid
     pid+=1
-    plt.savefig(str(pid)+'.png')
-    #plt.show()
+    #plt.savefig(str(pid)+'.png')
+    plt.show()
 '==================================================================================='
 
-#visualizer(initial_cluster)
+
 
 '===============================k-means clustering library=========================='
 'select best K'
@@ -171,7 +180,7 @@ def assigning_cluster(initial_points,all_centroid):
         all_centroid[assign][4]+=1
         cluster_members[assign].append(p)
         #print(cluster_members)
-        visualizer(cluster_members)
+        #visualizer(cluster_members)
     '''
     print('After Assigning (centroid):')
     print(all_centroid)
@@ -212,16 +221,16 @@ def kmeans(initial_points,K=None):
     if K==None:
         K=select_k()
 
-    cluster_history=[]
+    history=[]
     
-    visualizer(initial_points)
-
     'all_centroid={"cluster_name":[x,y,sumx,sumy,N]}'
     all_centroid=pick_init_centroid(K,initial_points)
+
     cluster_members={}
     for c in all_centroid:
         cluster_members[c]=[(all_centroid[c][0],all_centroid[c][1])]
-    visualizer(cluster_members)
+
+    #visualizer(cluster_members)
 
     '''
     print('')
@@ -230,16 +239,17 @@ def kmeans(initial_points,K=None):
     '''
 
     all_centroid,cluster_members,stabilize=assigning_cluster(initial_points,all_centroid)
-    cluster_history.append(cluster_members)
     
-    visualizer(cluster_members)
+    Round=1
+    #visualizer(cluster_members)
     while stabilize==False:
+        Round+=1
+        print(Round)
+        history.append(cluster_members)  
         all_centroid,cluster_members,stabilize=assigning_cluster(initial_points,all_centroid)
-        cluster_history.append(cluster_members)  
-        visualizer(cluster_members)
-    
-    print('Total Rounds: ',len(cluster_history))
-    print('')
+
+     #   visualizer(cluster_members)
+
     '''
     print('Final Clusters:')
     print(all_centroid)   
@@ -248,7 +258,10 @@ def kmeans(initial_points,K=None):
     print(cluster_members)
     print('')
     '''
-    return all_centroid,cluster_members,cluster_history
+    print('sdasddasd',len(history))
+    
+
+    return all_centroid,cluster_members,history
 
 
 "change clusters' name(defulat name:0,1,2...k)"
@@ -270,13 +283,19 @@ def rename_cluster(cluster,cluster_name=None):
     return cluster
 '==================================================================================='
 
-initial_cluster= find_from_cluster(lines)
-centroid,demo,cluster_history=kmeans(initial_cluster)
-
-
-
+initial_cluster= get_coordinate(lines)
+visualizer(initial_cluster)
+centroid,new_cluster,history=kmeans(initial_cluster,2)
 '''
-for h in cluster_history:
+for h in history:
     visualizer(h)
-''' 
-#visualizer(demo)
+'''
+visualizer(new_cluster)
+import winsound
+duration = 1000  # millisecond
+freq = 440  # Hz
+winsound.Beep(freq, duration)
+import os
+duration = 1  # second
+freq = 440  # Hz
+os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
