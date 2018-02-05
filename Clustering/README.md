@@ -17,6 +17,8 @@
 `import matplotlib as plt`
 * [numpy](http://www.numpy.org/)
  `import numpy as np`
+ * [scipy](https://www.scipy.org/)
+ `from scipy.io import arff`
 #
 #### TEST FILES:
 * [simple_cluster](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/simple_cluster.csv)
@@ -27,10 +29,10 @@
 * assigning_cluster()
 * reset_cluster()
 * [kmeans()](#kmeansdataKNone)
-* [visualize()](#)
+* [visualizer()](#visualizercluster)
 
-> ##### `kmeans(data,K=None)`
->-clustering by K-means
+##### `kmeans(data,K=None)`
+> -clustering by K-means
 
     $ python  -i k-means.py simple_cluster.csv
     >>> kmeans()
@@ -46,4 +48,14 @@
     2: [(2, 1), (2, 2), (2, 3), (3, 1), (3, 3), (4, 2), (4, 3), (5,1), (5, 2), (5, 3), (6, 2)], 
     3: [(13, 1), (14, 3), (14, 4), (15, 3), (15, 5), (16, 2), (16, 4), (17, 3), (17, 4), (17, 5)]}
     `
+#####  `visualizer(cluster)`
+> -cluster visualization
+> * `>>>final_controids,final_members,history=kmeans(`[`simple_cluster`](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/datasets/simple_cluster.csv)`,4)`
+> * `>>>visualizer(history)`
+>
+> ![initial](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv1.png)
+> ![pick_k_points](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv2.png)
+> ![round_1](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv3.png)
+> ![round_2](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv4.png)
+
 
