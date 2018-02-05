@@ -114,8 +114,9 @@ def visualizer(cluster):
     #fig.tight_layout(pad=10)
 
     pid+=1
-   
-    plt.savefig('./pic/'+str(fipath)+str(pid)+'.png' ,bbox_inches='tight')
+    datapath="./datasets/"
+    filename=fipath.replace(datapath,'')
+    plt.savefig('./figures/'+filename+str(pid)+'.png' ,bbox_inches='tight')
     #plt.show()
 '==================================================================================='
 
