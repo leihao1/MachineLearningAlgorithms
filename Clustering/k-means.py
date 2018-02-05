@@ -1,53 +1,58 @@
-import random
-import math
-from math import sqrt
-import sys
-import csv
-import matplotlib.pyplot as plt
-import numpy as np
+import random,math,sys,csv,matplotlib.pyplot as plt, numpy as np, pandas as pd
+from math import *
+from scipy.io import arff
 
 
 '================================deal with input file==============================='
 fipath=sys.argv[1]
-with open(fipath,'r') as fi:
-    reader=csv.reader(fi)
-    lines=list(reader)
-ROW=len(lines)
-COLUMN=len(lines[0])
 back_up={}
-'find all data coordinate from exist cluster in the file'
-'given cluster are used to evaluate select_k function'
-def find_from_cluster(files):
-    initial_points=[]
-    for r in range(ROW):
-        for c in range(COLUMN):
-            if files[r][c] != '':
-                position=(r+1,c+1)
-                initial_points.append(position)
-                global back_up
-                back_up[position]=int(files[r][c])
-    temp={}
-    temp[0]=initial_points
-    initial_points=temp
-    return initial_points
 
-'get data coordinate directly from file'
-def get_coordinate(files):
-    is_cluster_file=False
-    initial_points={}
-    initial_points[0]=[]
-    for row in files:
-        x=row[0]
-        y=row[1]
-        if x=='' or y=='':
-            is_cluster_file=True
-        initial_points[0].append((float(x),float(y)))
+def open_file():
+    try:
+        return open_csv()
+    except :
+        return open_arff()
 
-    if is_cluster_file:
-        initial_points=find_from_cluster(files)
+def open_csv():
+    with open(fipath,'r') as fi:
+        reader=csv.reader(fi)
+        lines=list(reader)
+    ROW=len(lines)
+    COLUMN=len(lines[0])
 
-    return initial_points
+    'get data coordinate directly from file'
+    def get_coordinate(files):
+        is_cluster_file=False
+        initial_points=[]
+        for row in files:
+            x=row[0]
+            y=row[1]
+            if x=='' or y=='':
+                is_cluster_file=True
+                break
+            initial_points.append((float(x),float(y)))
+        if is_cluster_file:
+            initial_points=find_from_cluster(files)
+        return initial_points
+
+    'Find all data coordinate from exist cluster in the file'
+    def find_from_cluster(files):
+        initial_points=[]
+        for r in range(ROW):
+            for c in range(COLUMN):
+                if files[r][c] != '':
+                    position=(r+1,c+1)
+                    initial_points.append(position)
+                    global back_up
+                    back_up[position]=int(files[r][c])
+        return initial_points
+
+    return get_coordinate(lines)
     
+def open_arff():
+    data = arff.loadarff(fipath)
+    initial_points=[i for i in data[0]]
+    return initial_points
 '==================================================================================='
 
 
@@ -55,18 +60,17 @@ def get_coordinate(files):
 '=================================visualization====================================='
 pid=0
 xmax=0
-xmin=1
+xmin=0
 ymax=0
-ymin=1
-'show scatterplot by matplotlib and numpy'
+ymin=0
+count=30
 def visualizer(cluster):
     
     # Create data
     k = len(cluster)
     data=[]
-    count=0
-    global xmax,xmin,ymax,ymin    
-    
+    global xmax,xmin,ymax,ymin,count,pid    
+
     for g in cluster:
         xy=cluster[g]
         x=[i[0] for i in xy]
@@ -83,32 +87,36 @@ def visualizer(cluster):
                 ymin=min(y)
         g=(np.array(x), np.array(y))
         data.append(g)
-        count+=len(x)
+        if pid ==0:
+            count+=len(x)
 
-    groups = ['cluster '+str(i)+"["+str(len(cluster[i]))+"]" for i in cluster]
+   
+    groups = ['cluster'+str(i)+":["+str(len(cluster[i]))+"]" for i in cluster]
     colors = np.random.rand(k)
     
     # Create plot
-    fig = plt.figure(figsize=(xmax,ymax))
-    ax = fig.add_subplot(1, 1, 1, axisbg="1.0")
+    fig = plt.figure(figsize=(log(count,2),log(count,2)))
+    #ax = fig.add_subplot(1, 1, 1, axisbg="1.0")
 
     for data,color,group in zip(data,colors,groups):
         x, y = data
-        plt.scatter(x,y,alpha=1,label=group)
+        plt.scatter(x,y,alpha=1,edgecolors='none',s=10*(5-log(count,8)),label=group)
     
     plt.title('K-Means Clustering')
-    #ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
-    ax.legend(bbox_to_anchor=(1.13, 1))
-    #ax.legend(loc='upper center', bbox_to_anchor=(1.05, 1.05),ncol=1, fancybox=True, shadow=True)
-    #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+    #plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
+    plt.legend(bbox_to_anchor=(1, 1))
+    #plt.legend(loc='upper center', bbox_to_anchor=(1.05, 1.05),ncol=3, fancybox=True, shadow=True)
+    #plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     
-    plt.xlim(xmin-2,xmax+2)
-    plt.ylim(ymin-2,ymax+2)
-    
-    global pid
+    plt.xlim(1.1*xmin,1.1*xmax)
+    plt.ylim(1.1*ymin,1.1*ymax)
+    #fig.tight_layout(pad=10)
+
     pid+=1
-    #plt.savefig(str(pid)+'.png')
-    plt.show()
+   
+    plt.savefig('./pic/'+str(fipath)+str(pid)+'.png' ,bbox_inches='tight')
+    #plt.show()
 '==================================================================================='
 
 
@@ -122,6 +130,7 @@ def select_k():
 
 'pick K initial points as K clusters by dispersed method'
 def pick_init_centroid(K,initial_points):
+    assert(type(initial_points)==dict),"Input data type must be dict"
     '  1.sampling'
     '->2.dispersed'
     temp=[]
@@ -147,12 +156,12 @@ def pick_init_centroid(K,initial_points):
         picked.append(waitlist)
         initial_points.remove(waitlist)
         initial_centroids[n]=[waitlist[0],waitlist[1],0,0,0]
-       
     return initial_centroids
         
 
-'go through the whole dataset and assign each point to one cluster by centroid distance'
+'assign each points in dataset to one closest cluster'
 def assigning_cluster(initial_points,all_centroid):
+    assert(type(initial_points)==dict),"Input data type must be dict"
     cluster_members={}
     temp=[]
     for p in initial_points:
@@ -174,7 +183,6 @@ def assigning_cluster(initial_points,all_centroid):
             if cluster_dis[i] < min_dis:
                 min_dis,assign=cluster_dis[i],i
 
-        'change sumx and sumy and total number of points'
         all_centroid[assign][2]+=p[0]
         all_centroid[assign][3]+=p[1]
         all_centroid[assign][4]+=1
@@ -193,8 +201,9 @@ def assigning_cluster(initial_points,all_centroid):
     return final_centroid,cluster_members,stabilize
 
 
-'reset cluster centroid and repeat assigning untill stabilize'
+'reset cluster centroid and repeat assigning step untill stabilize'
 def reset_cluster(cluster):
+    assert(type(cluster)==dict),"Input data type must be dict"
     stabilize=True
     for c in cluster:    
         x=cluster[c][0]
@@ -216,40 +225,36 @@ def reset_cluster(cluster):
 
 'clustering by K-means '
 def kmeans(initial_points,K=None):
-    assert(K==None or (K>0 and type(K)==int)),"K must be a positive integer"
-    assert(type(initial_points)==dict),"Input data type must be list"
+    assert(K==None or (K>0 and type(K)==int)),"K should be a positive integer"
+    assert(type(initial_points)==dict),"Input data type must be dict"
+    assert(K==None or K<=len(initial_points[0])),"K should be less than exist points"
     if K==None:
         K=select_k()
 
     history=[]
-    
+    history.append(initial_points)
     'all_centroid={"cluster_name":[x,y,sumx,sumy,N]}'
     all_centroid=pick_init_centroid(K,initial_points)
-
     cluster_members={}
     for c in all_centroid:
         cluster_members[c]=[(all_centroid[c][0],all_centroid[c][1])]
-
     #visualizer(cluster_members)
-
+    history.append(cluster_members)
     '''
     print('')
     print('Initial Clusters:',all_centroid)
     print('')
     '''
-
-    all_centroid,cluster_members,stabilize=assigning_cluster(initial_points,all_centroid)
-    
-    Round=1
+    stabilize=False
+    Round=0
     #visualizer(cluster_members)
     while stabilize==False:
+        all_centroid,cluster_members,stabilize=assigning_cluster(initial_points,all_centroid)
+        if stabilize==False:
+            history.append(cluster_members)          
         Round+=1
         print(Round)
-        history.append(cluster_members)  
-        all_centroid,cluster_members,stabilize=assigning_cluster(initial_points,all_centroid)
-
-     #   visualizer(cluster_members)
-
+        #visualizer(cluster_members)
     '''
     print('Final Clusters:')
     print(all_centroid)   
@@ -258,16 +263,12 @@ def kmeans(initial_points,K=None):
     print(cluster_members)
     print('')
     '''
-    print('sdasddasd',len(history))
-    
-
     return all_centroid,cluster_members,history
 
 
 "change clusters' name(defulat name:0,1,2...k)"
 def rename_cluster(cluster,cluster_name=None):
     assert(type(cluster)==dict and len(cluster)>0),"Target cluster must be a valid dictionary"
-    
     if cluster_name!=None:
         print("CLUSTER[>",cluster_name,"<]:")  
         str = input()
@@ -283,19 +284,16 @@ def rename_cluster(cluster,cluster_name=None):
     return cluster
 '==================================================================================='
 
-initial_cluster= get_coordinate(lines)
-visualizer(initial_cluster)
-centroid,new_cluster,history=kmeans(initial_cluster,2)
-'''
+initial_points= open_file()
+
+initial_cluster={}
+initial_cluster[0]=initial_points
+
+#visualizer(initial_cluster)
+
+final_centroid,final_cluster,history=kmeans(initial_cluster,4)
+
 for h in history:
     visualizer(h)
-'''
-visualizer(new_cluster)
-import winsound
-duration = 1000  # millisecond
-freq = 440  # Hz
-winsound.Beep(freq, duration)
-import os
-duration = 1  # second
-freq = 440  # Hz
-os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+
+
