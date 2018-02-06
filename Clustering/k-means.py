@@ -123,10 +123,36 @@ def visualizer(cluster):
 
 
 '===============================k-means clustering library=========================='
-'select best K'
-'good_k={number:avg_cenroid_dis}'
-def select_k():
+'select best K by elbow method'
+def select_k(initial_cluster):
+    diff_k={}
+    initial_points=[]
+    for c in initial_cluster:
+        initial_points += initial_cluster[c]
+    print("init:",initial_points)
+    for k in range(1,10):
+        final_centroid,final_clusters,history=kmeans(initial_cluster,k)
+        print("cen:",final_centroid)
+        print('clus:',final_clusters)
+        if len(final_centroid)!=len(final_clusters):
+            print('final centroid and final clusters inconsistent')
+        sse=0
+        for i in range(0,len(final_clusters)):
+            xmean,ymean=final_centroid[i][0],final_centroid[i][1]
+            if final_centroid[i][4]!=len(final_clusters[i]):
+                print('N in centroid should equals to members in cluster')
+                print(final_centroid[i])
+                print(final_clusters[i])
+                exit()
+            for p in final_clusters[i]:
+                x,y=p[0],p[1]
+                sse+=(x-xmean)**2+(y-ymean)**2
+        diff_k[k]=sse
     return 4
+    print(diff_k)
+            
+        
+        
 
 
 'pick K initial points as K clusters by dispersed method'
@@ -190,15 +216,23 @@ def assigning_cluster(initial_points,all_centroid):
         cluster_members[assign].append(p)
         #print(cluster_members)
         #visualizer(cluster_members)
-    '''
-    print('After Assigning (centroid):')
+    
+    print('After Assigning(centroid):')
     print(all_centroid)
     print('')
-    print('After Assigning (members):')
+    print('After Assigning(members):')
     print(cluster_members)
     print('')
-    '''
+    
     final_centroid,stabilize=reset_cluster(all_centroid)
+
+    print('After Reset(centroid):')
+    print(final_centroid)
+    print('')
+    print('After Reset(members):')
+    print(cluster_members)
+    print('')
+
     return final_centroid,cluster_members,stabilize
 
 
@@ -219,9 +253,9 @@ def reset_cluster(cluster):
                 y=sumy/N
                 cluster[c][0]=x 
                 cluster[c][1]=y
-                cluster[c][2]=0
-                cluster[c][3]=0
-                cluster[c][4]=0
+            cluster[c][2]=0
+            cluster[c][3]=0
+            cluster[c][4]=0
     return cluster,stabilize
 
 'clustering by K-means '
@@ -230,7 +264,7 @@ def kmeans(initial_points,K=None):
     assert(type(initial_points)==dict),"Input data type must be dict"
     assert(K==None or K<=len(initial_points[0])),"K should be less than exist points"
     if K==None:
-        K=select_k()
+        K=select_k(initial_points)
 
     history=[]
     history.append(initial_points)
@@ -241,11 +275,11 @@ def kmeans(initial_points,K=None):
         cluster_members[c]=[(all_centroid[c][0],all_centroid[c][1])]
     #visualizer(cluster_members)
     history.append(cluster_members)
-    '''
+    
     print('')
     print('Initial Clusters:',all_centroid)
     print('')
-    '''
+    
     stabilize=False
     Round=0
     #visualizer(cluster_members)
@@ -256,14 +290,14 @@ def kmeans(initial_points,K=None):
         Round+=1
         print(Round)
         #visualizer(cluster_members)
-    '''
+    
     print('Final Clusters:')
     print(all_centroid)   
     print('')
     print('Final Members:')
     print(cluster_members)
     print('')
-    '''
+    
     return all_centroid,cluster_members,history
 
 
@@ -292,7 +326,7 @@ initial_cluster[0]=initial_points
 
 #visualizer(initial_cluster)
 
-final_centroid,final_cluster,history=kmeans(initial_cluster,4)
+final_centroid,final_cluster,history=kmeans(initial_cluster)
 
 for h in history:
     visualizer(h)
