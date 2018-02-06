@@ -118,6 +118,25 @@ def visualizer(cluster):
     filename=fipath.replace(datapath,'')
     plt.savefig('./figures/'+filename+str(pid)+'.png' ,bbox_inches='tight')
     #plt.show()
+
+def show_elbow(coordinate):
+    
+    x_list = []
+    y_list = []
+    for xy in coordinate:
+        x_list.append(xy[0])
+        y_list.append(xy[1])
+
+    plt.figure('Elbow Method')
+    ax = plt.gca()
+
+    ax.set_xlabel('Number of clusters(K)')
+    ax.set_ylabel('Sum of squared errors')
+    
+    ax.plot(x_list, y_list, color='r', linewidth=1.5, alpha=0.6)
+    
+    plt.show()
+    
 '==================================================================================='
 
 
@@ -129,30 +148,37 @@ def select_k(initial_cluster):
     initial_points=[]
     for c in initial_cluster:
         initial_points += initial_cluster[c]
-    print("init:",initial_points)
-    for k in range(1,10):
+    for k in range(1,len(initial_points)+1):
         final_centroid,final_clusters,history=kmeans(initial_cluster,k)
-        print("cen:",final_centroid)
-        print('clus:',final_clusters)
         if len(final_centroid)!=len(final_clusters):
             print('final centroid and final clusters inconsistent')
+            exit()
         sse=0
         for i in range(0,len(final_clusters)):
             xmean,ymean=final_centroid[i][0],final_centroid[i][1]
-            if final_centroid[i][4]!=len(final_clusters[i]):
-                print('N in centroid should equals to members in cluster')
-                print(final_centroid[i])
-                print(final_clusters[i])
-                exit()
             for p in final_clusters[i]:
                 x,y=p[0],p[1]
                 sse+=(x-xmean)**2+(y-ymean)**2
         diff_k[k]=sse
-    return 4
-    print(diff_k)
-            
-        
-        
+
+    coordinate=[]
+    for k in diff_k:
+        coordinate.append((k,diff_k[k]))
+    
+    show_elbow(coordinate)
+
+    def enter():
+        str=input("Please Enter K Value:")
+        try:
+            k=int(str)
+        except:
+            print('K must be an integer!')
+            k=enter()
+        if k<=0:
+            print('K must be more than zero!')
+            k=enter()
+        return k
+    return enter()
 
 
 'pick K initial points as K clusters by dispersed method'
@@ -216,23 +242,23 @@ def assigning_cluster(initial_points,all_centroid):
         cluster_members[assign].append(p)
         #print(cluster_members)
         #visualizer(cluster_members)
-    
+    '''
     print('After Assigning(centroid):')
     print(all_centroid)
     print('')
     print('After Assigning(members):')
     print(cluster_members)
     print('')
-    
+    '''
     final_centroid,stabilize=reset_cluster(all_centroid)
-
+    '''
     print('After Reset(centroid):')
     print(final_centroid)
     print('')
     print('After Reset(members):')
     print(cluster_members)
     print('')
-
+    '''
     return final_centroid,cluster_members,stabilize
 
 
@@ -275,11 +301,11 @@ def kmeans(initial_points,K=None):
         cluster_members[c]=[(all_centroid[c][0],all_centroid[c][1])]
     #visualizer(cluster_members)
     history.append(cluster_members)
-    
+    '''
     print('')
     print('Initial Clusters:',all_centroid)
     print('')
-    
+    '''
     stabilize=False
     Round=0
     #visualizer(cluster_members)
@@ -288,16 +314,16 @@ def kmeans(initial_points,K=None):
         if stabilize==False:
             history.append(cluster_members)          
         Round+=1
-        print(Round)
+        #print(Round)
         #visualizer(cluster_members)
-    
+    '''
     print('Final Clusters:')
     print(all_centroid)   
     print('')
     print('Final Members:')
     print(cluster_members)
     print('')
-    
+    '''
     return all_centroid,cluster_members,history
 
 
@@ -330,5 +356,6 @@ final_centroid,final_cluster,history=kmeans(initial_cluster)
 
 for h in history:
     visualizer(h)
+#visualizer(final_cluster)
 
 
