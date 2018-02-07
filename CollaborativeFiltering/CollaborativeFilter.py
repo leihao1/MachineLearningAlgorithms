@@ -3,16 +3,27 @@ import sys
 import csv
 import operator
 
-fipath=sys.argv[1]
-ftest_path=sys.argv[2]
+#fipath=sys.argv[1]
+#ftest_path=sys.argv[2]
+def open_file():
+    try:
+        lines=open_csv_ui()
+        test_set=open_csv_test()
+        return lines,test_set
+    except:
+        pass
+def open_csv_ui():
+    with open(sys.argv[1],'r') as fi:
+        reader=csv.reader(fi)
+        lines=list(reader)
+    return lines
+def open_csv_test():
+    with open(sys.argv[2],'r') as ftest:
+        reader2=csv.reader(ftest)
+        test_set=list(reader2)
+    return test_set
 
-with open(fipath,'r') as fi:
-    reader=csv.reader(fi)
-    lines=list(reader)
-with open(ftest_path,'r') as ftest:
-    reader2=csv.reader(ftest)
-    test_set=list(reader2)
-
+lines,test_set=open_file()
 ROW=len(lines)
 COLUMN=len(lines[0])
 HEADER=False
@@ -75,7 +86,10 @@ def sim(v1,v2):
             a+=v1[i]*v1[i]
             b+=v2[i]*v2[i]
         down=sqrt(a)*sqrt(b)
-        return up/down
+        if down==0:
+            return 0.00
+        else:
+            return up/down
 
 
 'calculate all similarity between items(rows) by comparing with the given item(row)'
@@ -125,7 +139,7 @@ def basic_predict(row,col,N,with_header=False):
 
     'get integer matrix rows*columns'
     matrix=initialize(lines)
-
+    #print(matrix)
     """
     rating value in the given position already exist
     if matrix[row-1][col-1]:
@@ -150,14 +164,14 @@ def basic_predict(row,col,N,with_header=False):
     if empty==False:
         predict = estimate(matrix,neighbors,col)
         return predict
-    else:
-        exit()
+    #else:
+     #   exit()
 
 
 'predict user rating using CF combine with baseline algorithsm'
 def baseline_predict(row,col,N):
 
-    assert(0<N<ROW),'Neighbor N must between 0 and the maximum row number'
+    assert(0<N<ROW),'Number of neighbors N must between 1 and the maximum row number'
     assert(row>0 and col>0),"Row or Column must be positive integers"
     assert(row<=ROW and col<=COLUMN),"Row or Column out of dataset boundary"
     matrix=initialize(lines)
@@ -209,13 +223,13 @@ Evaluate different algorithms(basic/baseline+cf) with given neighbors.
 RMSE:Root-mean-square error.
 '''
 def evaluate(function,neighbors):
-    test_set=get_test_points()
+    test_points=get_test_points()
     square_error=0
-    N=len(test_set)
+    N=len(test_points)
 
     assert(N>1),"Test set must including more than one data"
 
-    for p in test_set:
+    for p in test_points:
         predict=function(p[0]+1,p[1]+1,neighbors)
         square_error += pow(predict-p[2],2)
 
