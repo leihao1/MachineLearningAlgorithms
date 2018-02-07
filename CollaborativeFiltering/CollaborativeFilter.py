@@ -2,16 +2,17 @@ from math import sqrt
 import sys
 import csv
 import operator
+import line_graph
+import time
 
-#fipath=sys.argv[1]
-#ftest_path=sys.argv[2]
+'========================================================================'
 def open_file():
     try:
         lines=open_csv_ui()
         test_set=open_csv_test()
         return lines,test_set
     except:
-        pass
+        print('open file error')
 def open_csv_ui():
     with open(sys.argv[1],'r') as fi:
         reader=csv.reader(fi)
@@ -28,7 +29,7 @@ ROW=len(lines)
 COLUMN=len(lines[0])
 HEADER=False
 overall_avg_rating=0
-
+'========================================================================='
 '''
 Initialize input file : 
 Fill empty data with None to make column correct.
@@ -243,4 +244,20 @@ def basic_evaluate(neighbors):
 'evaluate CF+baseline algorithms'
 def baseline_evaluate(neighbors):
     return evaluate(baseline_predict,neighbors)
-
+'============================================================================='
+def show_line_graph(neighbors=100):
+    n_rmse=[]
+    #n=round(percent/100*ROW)
+    n=neighbors
+    for i in range(1,n):
+        n_rmse.append((i,baseline_evaluate(i)))
+        if (i+1)/n==1:
+            k=99
+        else:
+            k=i*int(100/n)
+        str ='[Drawing]'+'>'*(  k//2)+' '*( (100-k-1) //2)
+        sys.stdout.write('\r'+str+'[%s%%]'%(int((i+1)*100/n)))
+        sys.stdout.flush()
+    line_graph.show_line_graph(n_rmse)
+'============================================================================='
+show_line_graph(10)
