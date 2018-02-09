@@ -89,8 +89,6 @@ def visualizer(cluster):
         data.append(g)
         if pid ==0:
             count+=len(x)
-
-   
     groups = ['cluster'+str(i)+":["+str(len(cluster[i]))+"]" for i in cluster]
     colors = np.random.rand(k)
     
@@ -102,7 +100,7 @@ def visualizer(cluster):
         x, y = data
         plt.scatter(x,y,alpha=1,edgecolors='none',s=10*(5-log(count,8)),label=group)
     
-    plt.title('K-Means Clustering')
+    plt.title('K-Means Clustering (k='+str(k)+')')
 
     #plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
     plt.legend(bbox_to_anchor=(1, 1))
@@ -120,7 +118,6 @@ def visualizer(cluster):
     #plt.show()
 
 def show_elbow(coordinate):
-    
     x_list = []
     y_list = []
     for xy in coordinate:
@@ -136,7 +133,6 @@ def show_elbow(coordinate):
     ax.plot(x_list, y_list, color='r', linewidth=1.5, alpha=0.6)
     
     plt.show()
-    
 '==================================================================================='
 
 
@@ -148,7 +144,9 @@ def select_k(initial_cluster):
     initial_points=[]
     for c in initial_cluster:
         initial_points += initial_cluster[c]
-    for k in range(1,len(initial_points)+1):
+    #n=len(initial_points)
+    n=20
+    for k in range(1,n+1):
         final_centroid,final_clusters,history=kmeans(initial_cluster,k)
         if len(final_centroid)!=len(final_clusters):
             print('final centroid and final clusters inconsistent')
@@ -160,11 +158,10 @@ def select_k(initial_cluster):
                 x,y=p[0],p[1]
                 sse+=(x-xmean)**2+(y-ymean)**2
         diff_k[k]=sse
-
+    print(diff_k)
     coordinate=[]
     for k in diff_k:
         coordinate.append((k,diff_k[k]))
-    
     show_elbow(coordinate)
 
     def enter():
@@ -261,7 +258,6 @@ def assigning_cluster(initial_points,all_centroid):
     '''
     return final_centroid,cluster_members,stabilize
 
-
 'reset cluster centroid and repeat assigning step untill stabilize'
 def reset_cluster(cluster):
     assert(type(cluster)==dict),"Input data type must be dict"
@@ -314,7 +310,7 @@ def kmeans(initial_points,K=None):
         if stabilize==False:
             history.append(cluster_members)          
         Round+=1
-        #print(Round)
+        print(Round)
         #visualizer(cluster_members)
     '''
     print('Final Clusters:')
@@ -325,7 +321,6 @@ def kmeans(initial_points,K=None):
     print('')
     '''
     return all_centroid,cluster_members,history
-
 
 "change clusters' name(defulat name:0,1,2...k)"
 def rename_cluster(cluster,cluster_name=None):
