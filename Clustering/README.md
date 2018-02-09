@@ -24,15 +24,18 @@
 * [simple_cluster](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/simple_cluster.csv)
 #
 #### FUNCTIONS:
-* select_k()
+* [select_k()](#select_kinitial_cluster)
 * pick_initial_points()
 * assigning_cluster()
 * reset_cluster()
-* [kmeans()](#kmeansdataKNone)
+* [kmeans()](#kmeansdataknone)
 * [visualizer()](#visualizercluster)
 
+##### `select_k(initial_cluster)`
+> shows user the figure of 'elbow' than ask user to assign a value of K
+> ![elbow method](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/Elbow_Method.png)
 ##### `kmeans(data,K=None)`
-> -clustering by K-means
+> clustering by K-means
 
     $ python  -i k-means.py simple_cluster.csv
     >>> kmeans()
@@ -49,7 +52,7 @@
     3: [(13, 1), (14, 3), (14, 4), (15, 3), (15, 5), (16, 2), (16, 4), (17, 3), (17, 4), (17, 5)]}
     `
 #####  `visualizer(cluster)`
-> -cluster visualization
+> cluster visualization
 > * `>>>final_controids,final_members,history=kmeans(`[`simple_cluster`](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/datasets/simple_cluster.csv)`,4)`
 > * `>>>visualizer(history)`
 >
