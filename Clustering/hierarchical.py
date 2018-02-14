@@ -6,8 +6,8 @@ import math,sys
 '=========================2-D Hierarchical Clustering Library========================'
 def bottom_up(init_points,number=1,cohesion=1):
     final=None
-    fast=1
-    if fast:
+    return_dict=1
+    if return_dict:
         k=len(init_points)
         temp=[[(i[0],i[1],i[0],i[1],1),[(i[0],i[1])]] for i in init_points]
 
@@ -19,7 +19,6 @@ def bottom_up(init_points,number=1,cohesion=1):
         cluster_dicts={}
         for i in range(len(temp)):
             cluster_dicts[i]=temp[i][1]
-
         final=cluster_dicts
     else:
         'tree=[(centroidx,centroidy,sumx,sumy,leaves),[left tree],[right tree]]'
@@ -114,7 +113,8 @@ def top_down():
 '===================================================================================='
 test=[(0,0),(1,2),(2,1),(4,1),(5,0),(5,3)]
 read=fr.open_file()
-final=bottom_up(read,3)
+
+final=bottom_up(read,4)
 
 vi.show_scatter(final)
 

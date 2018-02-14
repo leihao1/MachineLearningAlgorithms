@@ -1,18 +1,15 @@
 from math import sqrt
-import sys
-import csv
-import operator
+import sys,csv,operator,time
 import line_graph
-import time
 
-'========================================================================'
+'===========================Collaborative Filtering library=========================='
 def open_file():
     try:
         lines=open_csv_ui()
-        test_set=open_csv_test()
-        return lines,test_set
     except:
-        print('open file error')
+        print('No input file')
+        exit()
+    return lines
 def open_csv_ui():
     with open(sys.argv[1],'r') as fi:
         reader=csv.reader(fi)
@@ -24,7 +21,8 @@ def open_csv_test():
         test_set=list(reader2)
     return test_set
 
-lines,test_set=open_file()
+lines=open_file()
+    
 ROW=len(lines)
 COLUMN=len(lines[0])
 HEADER=False
@@ -165,8 +163,6 @@ def basic_predict(row,col,N,with_header=False):
     if empty==False:
         predict = estimate(matrix,neighbors,col)
         return predict
-    #else:
-     #   exit()
 
 
 'predict user rating using CF combine with baseline algorithsm'
@@ -206,6 +202,11 @@ def baseline_predict(row,col,N):
 'return the points that need to be test (set T)'
 def get_test_points():
     matrix=initialize(lines)
+    try:
+        test_set=open_csv_test()
+    except:
+        print('No input test file, please try again!')
+        exit()
     test_matrix=initialize(test_set)
     test_points=[]
     for row in range(len(matrix)):
@@ -245,7 +246,7 @@ def basic_evaluate(neighbors):
 def baseline_evaluate(neighbors):
     return evaluate(baseline_predict,neighbors)
 '============================================================================='
-def show_line_graph(neighbors=100):
+def visualize(neighbors=100):
     n_rmse=[]
     #n=round(percent/100*ROW)
     n=neighbors
@@ -260,4 +261,4 @@ def show_line_graph(neighbors=100):
         sys.stdout.flush()
     line_graph.show_line_graph(n_rmse)
 '============================================================================='
-show_line_graph(10)
+visualize(10)
