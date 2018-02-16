@@ -1,4 +1,4 @@
-import sys,csv 
+import sys,csv,time
 
 
 def open_file():
@@ -7,7 +7,6 @@ def open_file():
         lines=list(reader)
     temp=[i[0].split(' ') for i in lines]
     rows=[i[:-1] for i in temp]
-    del rows[0]
     return rows
 
 
@@ -72,7 +71,6 @@ def pass3(rows,c2,s):
                 if all_in(three,c2):
                     if not_duplicate(three,tripleton):
                         tripleton[three]=0
-                        
             elif len(three)==4:
                 t1=(three[1],three[2],three[3])
                 t2=(three[0],three[2],three[3])
@@ -84,7 +82,6 @@ def pass3(rows,c2,s):
                     if not_duplicate(f,tripleton):
                         if all_in(f,c2):
                             tripleton[f]=0   
-
     print(len(tripleton))
 
     temp=[]
@@ -105,30 +102,25 @@ def pass3(rows,c2,s):
     return L3
     
 
-import time,winsound
 start = time.clock()
 
 rows=open_file()
-
+del rows[0]
 baskets=len(rows)
 support=round(0.01*baskets)
 confidence=0.5
 
 singleton=pass1(rows,support)
 doubleton=pass2(rows,singleton,support)
-t1=pass3(rows,doubleton,support)
+tripleton=pass3(rows,doubleton,support)
 
     
 
 print(len(singleton))
 print(len(doubleton))
-print(len(t1))
+print(len(tripleton))
 
 
 end = time.clock()
 print ('Run Time:',end-start)
 
-winsound.Beep(400, 1000)
-
-duration = 1000  # millisecond
-freq = 440  # Hz
