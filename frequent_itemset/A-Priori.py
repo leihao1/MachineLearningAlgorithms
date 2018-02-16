@@ -10,24 +10,24 @@ def open_file():
     return rows
 
 
-def pass1(rows,s):
+def pass1(baskets,s):
     items={}
-    for i in rows:
+    for i in baskets:
         for j in i:
             if j not in items:
                 items[j]=1
             else:
                 items[j]+=1
-    frequent_items=[i for i in items if items[i] >= support]
+    frequent_items=[(i,) for i in items if items[i] >= support]
     return frequent_items
 
 
-def pass2(rows,c1,s):
+def pass2(baskets,c1,s):
     item_pairs={}
     for i in range(len(c1)):
         for j in range(i+1,len(c1)):
-            item_pairs[(c1[i],c1[j])]=0
-    for r in rows:
+            item_pairs[c1[i]+c1[j]]=0
+    for r in baskets:
         for p in item_pairs:
             if p[0] in r and p[1] in r:
                 item_pairs[p]+=1
@@ -35,7 +35,7 @@ def pass2(rows,c1,s):
     return doubleton
 
 
-def pass3(rows,c2,s):
+def pass3(baskets,c2,s):
     
     def all_in(three,c2):
         p1=(three[0],three[1])
@@ -94,7 +94,7 @@ def pass3(rows,c2,s):
     for i in temp:
         del tripleton[i]
     
-    for r in rows:
+    for r in baskets:
         for p in tripleton:
             if p[0] in r and p[1] in r and p[2] in r:
                 tripleton[p]+=1
@@ -104,15 +104,14 @@ def pass3(rows,c2,s):
 
 start = time.clock()
 
-rows=open_file()
-del rows[0]
-baskets=len(rows)
-support=round(0.01*baskets)
+baskets=open_file()
+del baskets[0]
+support=round(0.01*len(baskets))
 confidence=0.5
 
-singleton=pass1(rows,support)
-doubleton=pass2(rows,singleton,support)
-tripleton=pass3(rows,doubleton,support)
+singleton=pass1(baskets,support)
+doubleton=pass2(baskets,singleton,support)
+tripleton=pass3(baskets,doubleton,support)
 
     
 
