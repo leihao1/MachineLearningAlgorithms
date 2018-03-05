@@ -3,10 +3,10 @@
 Simple tool to predict item rating will be given by specific users with Collaborative Filtering algorithsm.
 
 #### TEST FILES:
-* [fi.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/fi.csv)
-* [target.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/target.png)
-* [similarity.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/similarity.png)
-* [result.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/result.png)
+* [fi.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/datasets/fi.csv)
+* [target.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/figures/target.png)
+* [similarity.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/figures/similarity.png)
+* [result.png](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/figures/result.png)
 
 #### FUNCTIONS: 
 * [`sim()`](#simv1v2)
@@ -66,7 +66,7 @@ CF combine with global baseline algorithms to solve cold start problem of CF.
 System can predict one item's rating now by using similar items even some of them did not rated by that user.
 
 #### TEST FILES:
-* [sample_movie_ratings.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/sample_movie_ratings.csv)
+* [sample_movie_ratings.csv](https://github.com/leihao1/soen691/blob/master/CollaborativeFiltering/datasets/sample_movie_ratings.csv)
 
 #### FUNCTIONS:
 * [`basic_predict()`](#basic_predictrowcoln)
