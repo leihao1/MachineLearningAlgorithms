@@ -10,34 +10,36 @@ def select_k(initial_cluster):
     for c in initial_cluster:
         initial_points += initial_cluster[c]
     #n=len(initial_points)
-    n=20
-    for k in range(1,n+1):
-        final_centroid,final_clusters,history=kmeans(initial_cluster,k)
-        if len(final_centroid)!=len(final_clusters):
-            print('final centroid and final clusters inconsistent')
-            exit()
-        sse=0
-        for i in range(0,len(final_clusters)):
-            xmean,ymean=final_centroid[i][0],final_centroid[i][1]
-            for p in final_clusters[i]:
-                x,y=p[0],p[1]
-                sse+=(x-xmean)**2+(y-ymean)**2
-        diff_k[k]=sse
-    print(diff_k)
-    coordinate=[]
-    for k in diff_k:
-        coordinate.append((k,diff_k[k]))
-    vi.show_line(coordinate)
+
+    #print(diff_k)
 
     def enter():
         str=input("Please Enter K Value:")
         try:
             k=int(str)
         except:
-            print('K must be an integer!')
+            #print('K must be an integer!')
+            print('Apply elbow method !')
+            n=30
+            for k in range(1,n+1):
+                final_centroid,final_clusters,history=kmeans(initial_cluster,k)
+                if len(final_centroid)!=len(final_clusters):
+                    print('final centroid and final clusters inconsistent')
+                    exit()
+                sse=0
+                for i in range(0,len(final_clusters)):
+                    xmean,ymean=final_centroid[i][0],final_centroid[i][1]
+                    for p in final_clusters[i]:
+                        x,y=p[0],p[1]
+                        sse+=(x-xmean)**2+(y-ymean)**2
+                diff_k[k]=sse
+            coordinate=[]
+            for k in diff_k:
+                coordinate.append((k,diff_k[k]))
+            vi.show_line(coordinate)
             k=enter()
         if k<=0:
-            print('K must be more than zero!')
+            print('K must be bigger than zero!')
             k=enter()
         return k
     return enter()
@@ -63,9 +65,9 @@ def pick_init_centroid(K,initial_points):
     for n in range(1,K):
         max_distance,waitlist=0,0
         for p in initial_points:
-            distance=0
+            distance=math.inf
             for i in picked:
-                distance+=math.hypot(p[0]-i[0],p[1]-i[1])
+                distance=min(distance,math.hypot(p[0]-i[0],p[1]-i[1]))
             if distance>max_distance:
                 max_distance,waitlist=distance,p
         picked.append(waitlist)
@@ -175,7 +177,7 @@ def kmeans(initial_points,K=None):
         if stabilize==False:
             history.append(cluster_members)          
         Round+=1
-        print(Round)
+        print('Round:',Round)
         #visualizer(cluster_members)
     '''
     print('Final Clusters:')
@@ -210,12 +212,13 @@ initial_points=fr.open_file()
 initial_cluster={}
 initial_cluster[0]=initial_points
 
-#visualizer(initial_cluster)
+vi.show_scatter(initial_cluster)
 
 final_centroid,final_cluster,history=kmeans(initial_cluster)
-
+'''
 for h in history:
     vi.show_scatter(h)
-#visualizer(final_cluster)
+'''
+vi.show_scatter(final_cluster)
 
 
