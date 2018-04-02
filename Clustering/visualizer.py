@@ -73,7 +73,7 @@ def show_scatter(cluster):
         pass
     codename=sys.argv[0].replace(".py",'')
     folderpath='./figures/'
-    plt.savefig(folderpath+codename+'-'+filename+'('+str(pid+2)+')'+'.png' ,bbox_inches='tight')
+    plt.savefig(folderpath+codename+'-'+filename+'('+str(pid)+')'+'.png' ,bbox_inches='tight')
     plt.show()
 
 
