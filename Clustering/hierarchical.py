@@ -14,7 +14,7 @@ def bottom_up(init_points,number=1,cohesion=1):
         while k >number:
             temp=fast_merge(temp)
             k=len(temp)
-            print(k)
+            print('cluster numbers:',k)
 
         cluster_dicts={}
         for i in range(len(temp)):
@@ -107,14 +107,13 @@ def merge(cluster_trees):
     cluster_trees.append(new_tree)
     return cluster_trees
 
-
 def top_down():
     pass
 '===================================================================================='
 test=[(0,0),(1,2),(2,1),(4,1),(5,0),(5,3)]
 read=fr.open_file()
 
-final=bottom_up(read,4)
+final=bottom_up(read,20)
 
 vi.show_scatter(final)
 

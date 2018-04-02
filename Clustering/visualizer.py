@@ -52,8 +52,8 @@ def show_scatter(cluster):
     #plt.legend(loc='upper center', bbox_to_anchor=(1.05, 1.05),ncol=3, fancybox=True, shadow=True)
     #plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     
-    plt.xlim(xmin-1,1+xmax)
-    plt.ylim(ymin-1,1+ymax)
+    plt.xlim(xmin-0.1*abs(xmin),xmax+0.1*abs(xmax))
+    plt.ylim(ymin-0.1*abs(ymin),ymax+0.1*abs(ymax))
     #fig.tight_layout(pad=10)
 
     pid+=1
@@ -73,8 +73,8 @@ def show_scatter(cluster):
         pass
     codename=sys.argv[0].replace(".py",'')
     folderpath='./figures/'
-    plt.savefig(folderpath+codename+'-'+filename+'-'+str(pid)+'.png' ,bbox_inches='tight')
-    #plt.show()
+    plt.savefig(folderpath+codename+'-'+filename+'('+str(pid+2)+')'+'.png' ,bbox_inches='tight')
+    plt.show()
 
 
 'take a list of coordinates,e.g [(1,1)(3,3)(2,2)(4,4)]'
@@ -94,6 +94,22 @@ def show_line(coordinate):
     
     ax.plot(x_list, y_list, color='r', linewidth=1.5, alpha=0.6)
     
+    datapath="./datasets/"
+    filename=sys.argv[1]
+    try:
+        filename=filename.replace(datapath,'')
+    except:
+        pass
+    try:
+        filename=filename.replace(".csv",'')
+    except:
+        pass
+    try:
+        filename=filename.replace(".arff",'')
+    except:
+        pass
+    folderpath='./figures/'
+    plt.savefig(folderpath+filename+'(elbow method)'+'.png' ,bbox_inches='tight')
     plt.show()
 '==================================================================================='
 
