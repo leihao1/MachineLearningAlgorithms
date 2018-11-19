@@ -12,6 +12,7 @@ def bottom_up(init_points,number=1,cohesion=1):
 
     while k >number:
         temp=merge_by_close_pair(temp)
+        #temp=fast_merge(temp)
         k=len(temp)
         print('cluster numbers:',k)
     
@@ -72,6 +73,44 @@ def merge_by_close_pair(clusters):
     clusters.remove(c1)
     clusters.append(new_cluster)
     return clusters
+
+'merge two cluster base on the dis between centroid'
+def fast_merge(temp):
+    if len(temp)==1:
+        print('There is only one cluster left ,can not merge anymore')
+        return temp
+    d0=temp[0]
+    d1=temp[1]
+    p0=d0[0]
+    p1=d1[0]
+    min_dis=math.hypot(p1[0]-p0[0],p1[1]-p0[1])
+
+    for i in range(len(temp)-1):
+        d3=temp[i]
+        p3=d3[0]
+        for j in range(i+1,len(temp)):
+            d4=temp[j]
+            p4=d4[0]
+            temp_dis=math.hypot(p3[0]-p4[0],p3[1]-p4[1])
+            if temp_dis<min_dis:
+                min_dis=temp_dis
+                d0=d3
+                d1=d4
+    p0=d0[0]
+    p1=d1[0]
+    sumx=p0[2]+p1[2]
+    sumy=p0[3]+p1[3]
+    N=p0[4]+p1[4]
+    d0_member=d0[1]
+    d1_member=d1[1]
+    new_member=d0_member+d1_member
+    new_point=[(sumx/N,sumy/N,sumx,sumy,N),new_member]
+
+    temp.remove(d0)
+    temp.remove(d1)
+    temp.append(new_point)
+    return temp
+
 '''======================================================'''
 
 def sample(initial_points,points=500):
@@ -167,8 +206,7 @@ def assign_points(initial_points,new_cluster):
     assert(total_points==len(initial_points)),"diff length between final cluster and initial points!"
     
     return final_cluster
-
-    
+'=============================================='   
 initial_points=fr.open_file()
 
 initial_cluster={}
