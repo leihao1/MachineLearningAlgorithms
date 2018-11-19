@@ -21,7 +21,7 @@
  `from scipy.io import arff`
 #
 #### TEST FILES:
-* [simple_cluster](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/simple_cluster.csv)
+* [simple_cluster](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/datasets/simple_cluster.csv)
 #
 #### FUNCTIONS:
 * [select_k()](#select_kinitial_cluster)
@@ -62,3 +62,4 @@
 > ![round_2](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv4.png)
 
 
+>>>>>>> a2808551525f907fc06027221d8ae7b50ec7bc3e:Clustering/K-Means.md
