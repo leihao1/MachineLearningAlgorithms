@@ -20,7 +20,7 @@ def select_k(initial_cluster):
         except:
             #print('K must be an integer!')
             print('Apply elbow method !')
-            n=30
+            n=20
             for k in range(1,n+1):
                 final_centroid,final_clusters,history=kmeans(initial_cluster,k)
                 if len(final_centroid)!=len(final_clusters):
@@ -219,6 +219,7 @@ final_centroid,final_cluster,history=kmeans(initial_cluster)
 for h in history:
     vi.show_scatter(h)
 '''
+vi.show_scatter(history[1])
 vi.show_scatter(final_cluster)
 
 

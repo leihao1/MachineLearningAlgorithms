@@ -42,7 +42,7 @@ def show_scatter(cluster):
 
     for data,color,group in zip(data,colors,groups):
         x, y = data
-        plt.scatter(x,y,alpha=1,edgecolors='none',s=10*(5-log(count,8)),label=group)
+        plt.scatter(x,y,alpha=1,edgecolors='none',s=60,label=group)
     
     title=sys.argv[0].replace(".py",'')
     plt.title(title+' Clustering (k='+str(k)+')')
@@ -52,8 +52,8 @@ def show_scatter(cluster):
     #plt.legend(loc='upper center', bbox_to_anchor=(1.05, 1.05),ncol=3, fancybox=True, shadow=True)
     #plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     
-    plt.xlim(xmin-0.1*abs(xmin),xmax+0.1*abs(xmax))
-    plt.ylim(ymin-0.1*abs(ymin),ymax+0.1*abs(ymax))
+    plt.xlim(xmin-0.1*(xmax-xmin)/2,xmax+0.1*(xmax-xmin)/2)
+    plt.ylim(ymin-0.1*(ymax-ymin)/2,ymax+0.1*(ymax-ymin)/2)
     #fig.tight_layout(pad=10)
 
     pid+=1
