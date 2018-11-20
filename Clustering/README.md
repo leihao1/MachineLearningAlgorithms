@@ -60,6 +60,3 @@
 > ![pick_k_points](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv2.png)
 > ![round_1](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv3.png)
 > ![round_2](https://github.com/leihao1/Mining-Massive-Datasets/blob/master/Clustering/figures/simple_cluster.csv4.png)
-
-
->>>>>>> a2808551525f907fc06027221d8ae7b50ec7bc3e:Clustering/K-Means.md
