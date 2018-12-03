@@ -122,4 +122,3 @@ Evaluate different algorithms predictions with RMSE(root-mean-square error) valu
 ##### `basic_evaluate(neighbors)`
 >
 > -evaluate basic CF algorithms
->>>>>>> a2808551525f907fc06027221d8ae7b50ec7bc3e:CollaborativeFiltering/Collaborative-Filtering.md
