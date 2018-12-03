@@ -1,3 +1,5 @@
+# Machine Learning Algorithms
+Implementation of different algorithms for bigdata analysis and pattern recognition by Python
 # Reference
 * CS246 Mining Massive Data Sets
 [Winter 2018](http://web.stanford.edu/class/cs246/)
