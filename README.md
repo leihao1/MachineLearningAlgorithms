@@ -1,5 +1,15 @@
 # Machine Learning Algorithms
 Implementation of different algorithms for bigdata analysis and pattern recognition by Python
+## Clustering
+<p float="left">
+  <img src="https://github.com/leihao1/MachineLearningAlgorithms/blob/master/Clustering/figures/CURE-2d-20c-no0(1).png" width="250">
+  <img src="https://github.com/leihao1/MachineLearningAlgorithms/blob/master/Clustering/figures/CURE-2d-20c-no0(6).png" width="300">
+</p>
+<p float="left">
+  <img src="https://github.com/leihao1/MachineLearningAlgorithms/blob/master/Clustering/figures/CURE-banana(1).png" width="250">
+  <img src="https://github.com/leihao1/MachineLearningAlgorithms/blob/master/Clustering/figures/CURE-banana(8).png" width="250">
+</p>
+
 # Reference
 * CS246 Mining Massive Data Sets
 [Winter 2018](http://web.stanford.edu/class/cs246/)
