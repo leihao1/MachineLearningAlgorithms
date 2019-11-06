@@ -10,6 +10,12 @@ Implementation of different algorithms for bigdata analysis and pattern recognit
   <img src="https://github.com/leihao1/MachineLearningAlgorithms/blob/master/Clustering/figures/CURE-banana(8).png" width="250">
 </p>
 
+## Netflix Recommender System
+[link](https://github.com/leihao1/MachineLearningAlgorithms/tree/master/CollaborativeFiltering)
+
+## Reinforcement Learning
+[link](https://github.com/leihao1/MachineLearningAlgorithms/tree/master/Sarsa)
+
 # Reference
 * CS246 Mining Massive Data Sets
 [Winter 2018](http://web.stanford.edu/class/cs246/)
